@@ -2,10 +2,10 @@ package container
 
 import react.*
 import component.*
+import data.ActiveUserState
 import data.State
 import react.redux.rConnect
 import hoc.withDisplayName
-import model.Employee
 import org.w3c.dom.events.Event
 import redux.RAction
 import redux.WrapperAction
@@ -16,7 +16,7 @@ interface AccountDispatchProps : RProps {
 }
 
 interface AccountStateProps : RProps {
-    var account: Pair<Int, Employee>
+    var account: ActiveUserState
 }
 
 val accountContainer =

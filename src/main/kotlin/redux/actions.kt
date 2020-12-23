@@ -1,5 +1,5 @@
 package redux
 
-import model.*
+import data.ActiveUserState
 
-class SetActiveAccount(val account: Pair<Int, Employee>?) : RAction
+class SetActiveAccount(val account: ActiveUserState) : RAction

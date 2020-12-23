@@ -10,7 +10,7 @@ import react.router.dom.route
 import react.router.dom.switch
 
 interface AppProps: RProps {
-    var activeAccount: ActiveEmployeeState
+    var activeAccount: ActiveUserState
 }
 
 interface RouteNumberResult : RProps {

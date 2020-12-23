@@ -1,36 +1,46 @@
 package component
 
+import data.ActiveUserState
+import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinext.js.asJsObject
+import kotlinx.coroutines.launch
 import kotlinx.html.InputType
 import react.*
 import react.dom.*
 import kotlinx.html.id
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
-import model.Employee
+import model.*
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
+import services.backendUrl
+import services.Request
+import services.scope
 
 interface AuthProps : RProps {
-    var accountList: Map<Int, Employee>
-    var login: (Pair<Int, Employee>) -> (Event) -> Unit
+    var login: (ActiveUserState) -> (Event) -> Unit
 }
 
 interface AuthState : RState {
-    var signInLogin: String
-    var signInPassword: String
+    var email: String
+    var password: String
+    var name: String
+    var isLogin: Boolean
 }
 
 class Auth : RComponent<AuthProps, AuthState>() {
 
     init {
         state.apply {
-            signInLogin = ""
-            signInPassword = ""
+            email = ""
+            password = ""
+            name = ""
+            isLogin = true
         }
     }
 
-    fun getTarget(event: Event) = event.target?.asJsObject().unsafeCast<HTMLInputElement>()
+    private fun getTarget(event: Event) = event.target?.asJsObject().unsafeCast<HTMLInputElement>()
 
     fun RBuilder.field(label: String, value: String, placeholder: String = "", type: InputType, onChange: (Event) -> Unit) {
         label {
@@ -44,36 +54,77 @@ class Auth : RComponent<AuthProps, AuthState>() {
         }
     }
 
-    val onClickLogin = {
-        val account = props.accountList.filterValues {
-            it.login == state.signInLogin && it.password == state.signInPassword
+    private suspend fun onClickLogin() {
+        try {
+            val obj = Request.post<UserWithToken> {
+                url("${backendUrl}/users/login")
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+                body = LoginUserPayload(state.email, state.password)
+            }
+            props.login(obj.user to obj.token)
         }
-        val onClickLoginError: (Event) -> Unit = {
+        catch (e: Exception) {
             console.error("Аккаунт не найден!")
         }
-        if (account.isNotEmpty())
-            props.login(account.keys.first() to account[account.keys.first()]!!)
-        else
-            onClickLoginError
     }
 
-    fun RBuilder.signIn() {
+    private suspend fun onClickSignUp() {
+        try {
+            Request.post<User> {
+                url("${backendUrl}/users/registry")
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+                body = SignUpUserPayload(state.name, state.email, state.password)
+            }
+            setState {
+                isLogin = true
+                password = ""
+                email = ""
+                name = ""
+            }
+        }
+        catch (e: Exception) {
+            console.error("Ошибка при создании аккаунта!")
+        }
+    }
+
+    private fun RBuilder.signIn() {
+        val title = if (state.isLogin) "Создать аккаунт" else "Войти в аккаунт"
+        val buttonText = if (!state.isLogin) "Создать" else "Войти"
         div {
             h2 {
-                +"Войти в аккаунт"
+                +title
             }
-            field("Логин", state.signInLogin,"", InputType.text) {
+            if (!state.isLogin)
+                field("Имя", state.name,"", InputType.text) {
+                    val target = getTarget(it)
+                    setState { name = target.value }
+                }
+            field("Почта", state.email,"", InputType.email) {
                 val target = getTarget(it)
-                setState { signInLogin = target.value }
+                setState { email = target.value }
             }
-            field("Пароль", state.signInPassword, "", InputType.password) {
+            field("Пароль", state.password, "", InputType.password) {
                 val target = getTarget(it)
-                setState { signInPassword = target.value }
+                setState { password = target.value }
             }
             input {
                 attrs.type = InputType.button
-                attrs.value = "Войти"
-                attrs.onClickFunction = onClickLogin()
+                attrs.value = buttonText
+                attrs.onClickFunction = {
+                    it.preventDefault()
+                    scope.launch {
+                        if (!state.isLogin) onClickSignUp() else onClickLogin()
+                    }
+                }
+            }
+            input {
+                attrs.type = InputType.button
+                attrs.value = title
+                attrs.onClickFunction = {
+                    setState { isLogin = !isLogin }
+                }
             }
         }
     }
@@ -87,9 +138,7 @@ class Auth : RComponent<AuthProps, AuthState>() {
 }
 
 fun RBuilder.auth(
-    accountList: Map<Int, Employee>,
-    login: (Pair<Int, Employee>) -> (Event) -> Unit
+    login: (ActiveUserState) -> (Event) -> Unit
 ) = child(Auth::class) {
-    attrs.accountList = accountList
     attrs.login = login
 }

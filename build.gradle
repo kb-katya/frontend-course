@@ -1,17 +1,15 @@
 plugins {
-    id 'org.jetbrains.kotlin.js' version '1.3.71'
+    id 'org.jetbrains.kotlin.js' version '1.4.21'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.21'
 }
 
 group 'org.example'
 version '1.0-SNAPSHOT'
 
-def kotlinVersion = "1.3.70"
-def reactVersion = "16.13.0"
-def suffix = "-pre.94-kotlin-"
-def kotlinReactVersion = reactVersion + suffix + kotlinVersion
-def kotlinReactRouterVersion = "4.3.1" + suffix + kotlinVersion
-def kotlinReduxVersion = "4.0.0" + suffix + kotlinVersion
-def kotlinReactReduxVersion = "5.0.7" + suffix + kotlinVersion
+def kotlinReactVersion = react_version + suffix + kotlin_version
+def kotlinReactRouterVersion = react_router_version + suffix + kotlin_version
+def kotlinReduxVersion = redux_version + suffix + kotlin_version
+def kotlinReactReduxVersion = react_redux_version + suffix + kotlin_version
 
 repositories {
     mavenCentral()
@@ -27,14 +25,18 @@ dependencies {
     implementation "org.jetbrains:kotlin-react-router-dom:$kotlinReactRouterVersion"
     implementation "org.jetbrains:kotlin-redux:$kotlinReduxVersion"
     implementation "org.jetbrains:kotlin-react-redux:$kotlinReactReduxVersion"
+    implementation "io.ktor:ktor-client-js:$ktor_version"
+    implementation "io.ktor:ktor-client-serialization:$ktor_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$ktor_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-js"
 }
+
 
 kotlin {
     target.browser {}
     sourceSets["main"].dependencies {
-        implementation(npm("react", "16.13.0"))
-        implementation(npm("react-dom", "16.13.0"))
+        implementation(npm("react", "17.0.1"))
+        implementation(npm("react-dom", "17.0.1"))
         implementation(npm("react-router-dom", "4.3.1"))
         implementation(npm("redux", "4.0.0"))
         implementation(npm("react-redux", "7.1.1"))

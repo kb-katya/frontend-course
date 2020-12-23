@@ -1,5 +1,6 @@
 package component
 
+import data.ActiveUserState
 import react.*
 import react.dom.*
 import kotlinx.html.js.onClickFunction
@@ -7,18 +8,14 @@ import model.*
 import org.w3c.dom.events.Event
 
 interface AccountProps : RProps {
-    var account: Pair<Int, Employee>
+    var account: ActiveUserState
     var logout: (Event) -> Unit
 }
 
 val fAccount =
     functionalComponent<AccountProps> { props ->
-        val accountId = props.account.first
-        val account = props.account.second
-        val accountType = if (account is Admin) "Админ"
-            else if (account is Operator) "Оператор"
-            else if (account is Consultant) "Консультант"
-            else ""
+        val accountId = props.account!!.first.id
+        val account = props.account!!.first
         div("account") {
             h1 {
                 +"Личный кабинет"
@@ -36,18 +33,6 @@ val fAccount =
                     }
                     +account.name
                 }
-                label {
-                    strong {
-                        +"Фамилия: "
-                    }
-                    +account.surname
-                }
-                label {
-                    strong {
-                        +"Роль: "
-                    }
-                    +accountType
-                }
                 button {
                     attrs.onClickFunction = props.logout
                     +"Выйти из аккаунта"
@@ -57,7 +42,7 @@ val fAccount =
     }
 
 fun RBuilder.account(
-    account: Pair<Int, Employee>,
+    account: ActiveUserState,
     logout: (Event) -> Unit
 ) = child(fAccount) {
     attrs.account = account

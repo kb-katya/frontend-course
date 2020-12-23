@@ -19,7 +19,7 @@ val fNavbar =
             }
             props.navItemList.map {
                 div {
-                    navLink(it.path) { +it.title }
+                    navLink<RProps>(it.path) { +it.title }
                 }
             }
         }

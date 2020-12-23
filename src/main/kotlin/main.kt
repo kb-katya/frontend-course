@@ -5,7 +5,7 @@ import react.dom.render
 import react.redux.provider
 import react.router.dom.hashRouter
 import redux.*
-import kotlin.browser.document
+import kotlinx.browser.document
 
 
 val store: Store<State, RAction, WrapperAction> = createStore(
