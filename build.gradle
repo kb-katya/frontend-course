@@ -3,8 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.21'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'com.kb-katya'
+version '0.0.1'
 
 def kotlinReactVersion = react_version + suffix + kotlin_version
 def kotlinReactRouterVersion = react_router_version + suffix + kotlin_version

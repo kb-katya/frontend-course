@@ -2,16 +2,16 @@ package container
 
 import react.*
 import component.*
-import data.ActiveUserState
 import data.State
+import model.User
 import react.redux.rConnect
 import org.w3c.dom.events.Event
 import redux.RAction
-import redux.SetActiveAccount
+import redux.SetActiveUser
 import redux.WrapperAction
 
 interface AuthDispatchProps : RProps {
-    var login: (ActiveUserState) -> (Event) -> Unit
+    var login: (Pair<Int, User>) -> (Event) -> Unit
 }
 
 interface AuthStateProps : RProps {
@@ -27,12 +27,12 @@ val authContainer =
             AuthDispatchProps,
             AuthProps
             >(
-        { _, _ ->
+        { state, _ ->
         },
         { dispatch, _ ->
             login = { account ->
                 {
-                    dispatch(SetActiveAccount(account))
+                    dispatch(SetActiveUser(account))
                 }
             }
         }

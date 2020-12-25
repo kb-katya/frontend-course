@@ -12,9 +12,9 @@ fun balanceReducer(state: BalanceListState = mapOf(), action: RAction) =
         else -> state
     }
 
-fun activeAccountReducer(state: ActiveUserState = null, action: RAction) =
+fun activeUserReducer(state: ActiveUserState = null, action: RAction) =
     when (action) {
-        is SetActiveAccount -> action.account
+        is SetActiveUser -> action.user
         else -> state
     }
 
@@ -22,5 +22,5 @@ fun rootReducer(state: State, action: RAction) =
     State(
         creditReducer(state.creditList, action),
         balanceReducer(state.balanceList, action),
-        activeAccountReducer(state.activeAccount, action)
+        activeUserReducer(state.activeUser, action)
     )

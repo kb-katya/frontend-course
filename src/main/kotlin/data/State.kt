@@ -6,17 +6,14 @@ typealias CreditListState = Map<Int, Credit>
 
 typealias BalanceListState = Map<Int, Balance>
 
-typealias ActiveUserState = Pair<User, String>?
+typealias ActiveUserState = Pair<Int, User>?
 
 
 data class State(
     val creditList: CreditListState,
     val balanceList: BalanceListState,
-    val activeAccount: ActiveUserState
+    val activeUser: ActiveUserState
 )
-
-fun <T> Map<Int, T>.newId() =
-    (this.maxBy { it.key }?.key ?: 0) + 1
 
 fun initialState() =
     State(

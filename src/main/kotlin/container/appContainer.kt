@@ -9,7 +9,7 @@ import hoc.withDisplayName
 val appContainer =
     rConnect<State, RProps, AppProps>(
         { state, _ ->
-            activeAccount = state.activeAccount
+            activeAccount = state.activeUser
         },
         {
             pure = false  // side effect of React Route
