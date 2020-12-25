@@ -1,5 +1,11 @@
 package redux
 
-import model.*
+import data.ActiveUserState
+import data.BalanceListState
+import data.CreditListState
 
-class SetActiveUser(val user: Pair<Int, User>?) : RAction
+class SetActiveAccount(val account: ActiveUserState) : RAction
+
+class SetCredits(val credits: CreditListState) : RAction
+
+class SetBalances(val balances: BalanceListState) : RAction

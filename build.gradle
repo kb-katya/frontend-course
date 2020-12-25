@@ -27,6 +27,7 @@ dependencies {
     implementation "org.jetbrains:kotlin-react-redux:$kotlinReactReduxVersion"
     implementation "io.ktor:ktor-client-js:$ktor_version"
     implementation "io.ktor:ktor-client-serialization:$ktor_version"
+    implementation "io.ktor:ktor-client-core:$ktor_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$ktor_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-js"
 }

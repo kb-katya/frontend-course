@@ -6,13 +6,13 @@ typealias CreditListState = Map<Int, Credit>
 
 typealias BalanceListState = Map<Int, Balance>
 
-typealias ActiveUserState = Pair<Int, User>?
+typealias ActiveUserState = Pair<String, User>?
 
 
 data class State(
     val creditList: CreditListState,
     val balanceList: BalanceListState,
-    val activeUser: ActiveUserState
+    val activeAccount: ActiveUserState
 )
 
 fun initialState() =

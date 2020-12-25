@@ -11,6 +11,8 @@ import react.router.dom.switch
 
 interface AppProps: RProps {
     var activeAccount: ActiveUserState
+    var credits: CreditListState
+    var balances: BalanceListState
 }
 
 interface RouteNumberResult : RProps {
@@ -20,6 +22,11 @@ interface RouteNumberResult : RProps {
 fun fApp() =
     functionalComponent<AppProps> { props ->
         navbar(navItemList.filter {
+            if (props.activeAccount !== null)
+            true
+            else
+                !it.isAuth
+        }.filter {
             if (props.activeAccount == null)
                 it.title != "Личный кабинет"
             else
@@ -36,6 +43,65 @@ fun fApp() =
                             accountContainer { }
                     }
                 )
+                if (props.activeAccount !== null) {
+                    route("/balance",
+                        exact = true,
+                        render = {
+                            balanceContainer { }
+                        }
+                    )
+                    route("/credit",
+                        exact = true,
+                        render = {
+                            creditContainer { }
+                        }
+                    )
+                    route("/balance/create-new",
+                        exact = true,
+                        render = {
+                            createBalanceContainer { }
+                        }
+                    )
+                    route("/credit/create-new",
+                        exact = true,
+                        render = {
+                            createCreditContainer { }
+                        }
+                    )
+                    route("/credit/:number",
+                        exact = true,
+                        render = renderObject(
+                            { props.credits[it] },
+                            { _, credit ->
+                                payCreditContainer {
+                                    attrs.obj = credit
+                                }
+                            }
+                        )
+                    )
+                    route("/credit/:number/transfer",
+                        exact = true,
+                        render = renderObject(
+                            { props.credits[it] },
+                            { _, credit ->
+                                transferCreditContainer {
+                                    attrs.obj = credit
+                                }
+                            }
+                        )
+                    )
+                    route("/balance/:number",
+                        exact = true,
+                        render = renderObject(
+                            { props.balances[it] },
+                            { _, balance ->
+                                transferBalanceContainer {
+                                    attrs.obj = balance
+                                }
+                            }
+                        )
+                    )
+                }
             }
         }
     }

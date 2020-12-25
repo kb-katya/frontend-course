@@ -4,17 +4,19 @@ import data.*
 
 fun creditReducer(state: CreditListState = mapOf(), action: RAction) =
     when (action) {
+        is SetCredits -> action.credits
         else -> state
     }
 
 fun balanceReducer(state: BalanceListState = mapOf(), action: RAction) =
     when (action) {
+        is SetBalances -> action.balances
         else -> state
     }
 
-fun activeUserReducer(state: ActiveUserState = null, action: RAction) =
+fun activeAccountReducer(state: ActiveUserState = null, action: RAction) =
     when (action) {
-        is SetActiveUser -> action.user
+        is SetActiveAccount -> action.account
         else -> state
     }
 
@@ -22,5 +24,5 @@ fun rootReducer(state: State, action: RAction) =
     State(
         creditReducer(state.creditList, action),
         balanceReducer(state.balanceList, action),
-        activeUserReducer(state.activeUser, action)
+        activeAccountReducer(state.activeAccount, action)
     )

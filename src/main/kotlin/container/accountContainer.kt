@@ -2,21 +2,21 @@ package container
 
 import react.*
 import component.*
+import data.ActiveUserState
 import data.State
 import react.redux.rConnect
 import hoc.withDisplayName
-import model.User
 import org.w3c.dom.events.Event
 import redux.RAction
 import redux.WrapperAction
-import redux.SetActiveUser
+import redux.SetActiveAccount
 
 interface AccountDispatchProps : RProps {
     var logout: (Event) -> Unit
 }
 
 interface AccountStateProps : RProps {
-    var account: Pair<Int, User>
+    var account: ActiveUserState
 }
 
 val accountContainer =
@@ -30,11 +30,11 @@ val accountContainer =
             AccountProps
             >(
         { state, _ ->
-            account = state.activeUser!!
+            account = state.activeAccount!!
         },
         { dispatch, _ ->
             logout = {
-                dispatch(SetActiveUser(null))
+                dispatch(SetActiveAccount(null))
             }
         }
     )(
